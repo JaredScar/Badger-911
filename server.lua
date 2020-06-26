@@ -14,7 +14,7 @@ roleList = {
 --- CODE ---
 function sendMsg(src, msg)
     TriggerClientEvent('chat:addMessage', src, {
-        args = { msg }
+        args = { prefix .. msg }
     })
 end
 function sendToDisc(title, message, footer)
