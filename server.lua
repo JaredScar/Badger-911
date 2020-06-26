@@ -13,7 +13,9 @@ roleList = {
 
 --- CODE ---
 function sendMsg(src, msg)
-    TriggerClientEvent('chatMessage', src, prefix .. msg)
+    TriggerClientEvent('chat:addMessage', src, {
+        args = { msg }
+    })
 end
 function sendToDisc(title, message, footer)
     local embed = {}
