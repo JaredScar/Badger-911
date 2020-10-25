@@ -2,11 +2,11 @@
 webhookURL = ''
 prefix = '^5[^1911^5] ^3';
 roleList = {
-    ['SAHP'] = 1,
-    ['BCSO'] = 1,
-    ['BCPD'] = 1,
-    ['CO'] = 1,
-    ['Fire & EMS'] = 1,
+    "SAHP",
+    "BCSO",
+    "BCPD",
+    "CO",
+    "EMS",
 }
 
 
@@ -41,6 +41,7 @@ AddEventHandler('playerDropped', function (reason)
   local src = source;
   isCop[src] = nil;
 end)
+
 RegisterNetEvent('Badger-911:CheckPerms')
 AddEventHandler('Badger-911:CheckPerms', function()
     local src = source;
@@ -50,25 +51,26 @@ AddEventHandler('Badger-911:CheckPerms', function()
         end
     end
     -- TriggerClientEvent("FaxDisVeh:CheckPermission:Return", src, true, false)
-    if identifierDiscord then
-        local roles = exports.discord_perms:GetRoles(src)
-        if not (roles == false) then
-            for i = 1, #roles do
-                for roleName, roleID in pairs(roleList) do
-                    if tonumber(roles[i]) == tonumber(roleID) then
-                        -- Return the index back to the Client script
-                        isCop[tonumber(src)] = true;
-                        print(GetPlayerName(src) .. " received Badger-911 permissions SUCCESS")
-                    end
+
+if identifierDiscord then
+    local roleIDs = exports.Badger_Discord_API:GetDiscordRoles(src)
+    if not (roleIDs == false) then
+        for i = 1, #roleList do
+            for j = 1, #roleIDs do
+                if exports.Badger_Discord_API:CheckEqual(roleList[i], roleIDs[j]) then
+                    isCop[tonumber(src)] = true;
+                    print("[911]" .. GetPlayerName(src) .. " received Badger-911 permissions SUCCESS")
                 end
             end
-        else
-            print(GetPlayerName(src) .. " did not receive Badger-911 permissions because roles == false")
         end
-    elseif identifierDiscord == nil then
-        print("identifierDiscord == nil")
+    else
+        print(GetPlayerName(src) .. " did not receive permissions because roles == false")
     end
+elseif identifierDiscord == nil then
+    print("identifierDiscord == nil")
+end
 end)
+
 locationTracker = {}
 idCounter = 0;
 function mod(a, b)
